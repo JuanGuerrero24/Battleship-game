@@ -114,63 +114,46 @@ public class TableroE {
 	
 	//tablero jugador
 	
-	public void ColocarbarcoPersona(int n,int coor1, int coor2, int Escuchador){
-		int aux=Escuchador;
-		switch (aux) {
-		case 1:
-			//Arriba
-			for(int i=1;i<n;i++) {
-				if (coor2-i < 0 || tableroj[coor1][coor2-i] == 1) {
-					tableroj [coor1][coor2]=0;
-					generadordebarcosramdom(n);	
-					return;
-				}
-			}
-			for(int i=1;i<n;i++) {
-				tableroj [coor1][coor2-i]=1;
-			}
-			break;
-		case 2:
-			//Abajo
-			for(int i=1;i<n;i++) {
-				if (coor2+i >=10 || tableroj[coor1][coor2+i] == 1) {
-					tableroj [coor1][coor2]=0;
-					generadordebarcosramdom(n);	
-					return;
-				}
-			}
-			for(int i=1;i<n;i++) {
-				tableroj [coor1][coor2+i]=1;
-			}	
-			break;
-		case 3:
-			//Derecha
-			for(int i=1;i<n;i++) {
-				if (coor1+i >=10 || tableroj[coor1+i][coor2] == 1) {
-					tableroj [coor1][coor2]=0;
-					generadordebarcosramdom(n);	
-					return;
-				}
-			}
-			for(int i=1;i<n;i++) {
-				tableroj [coor1+i][coor2]=1;
-			}
-			break;
-		case 4:
-			//Izquierda
-			for(int i=1;i<n;i++) {
-				if (coor1-i < 0 || tableroj[coor1-i][coor2] == 1) {
-					tableroj [coor1][coor2]=0;
-					generadordebarcosramdom(n);	
-					return;
-				}
-			}
-			for (int i=1;i<n;i++) {
-				tableroj [coor1-i][coor2]=1;
-				}	
-			break;
-		}	
-		
+	public void ColocarbarcoPersona(int [][] barco2,int [][] barco3, int [][] barco4, int [][] barco5){
+            
+            
+            for (int n=2;n<=5;n++){
+                for (int k=0;k<n;k++){
+                        
+                        if(n==2){
+                         int x=barco2 [k][0];
+                         int y=barco2 [k][1];
+                         tableroj[x][y]=1;
+                         System.out.println(x+"a "+y);
+                        }
+                        else if (n==3){
+                         int x=barco3 [k][0];
+                         int y=barco3 [k][1];
+                         tableroj[x][y]=1;
+                         System.out.println(x+"b "+y);
+                        }
+                        else if(n==4){
+                        int x=barco4 [k][0];
+                         int y=barco4 [k][1];
+                         tableroj[x][y]=1;
+                         System.out.println(x+"c "+y);
+                        }
+                        else if(n==5){
+                        int x=barco5 [k][0];
+                         int y=barco5 [k][1];
+                         tableroj[x][y]=1;
+                         //System.out.println(x+" "+y);
+                        }
+                          
+                      }
+                System.out.println("n es: "+n);
+            }
+            for (int i = 0; i<5;i++){
+                for (int j=0; j<2;j++){
+                    System.out.print(barco5[i][j]+"--");
+                }
+                System.out.println();
+            }
 	}
         
         public int [][] gettablero (){

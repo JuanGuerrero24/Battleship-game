@@ -153,7 +153,7 @@ public class inicio extends javax.swing.JFrame {
 
     private void boton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton1ActionPerformed
         
-        usuario_barcos user = new usuario_barcos ();
+        otra user = new otra ();
         
         dispose ();
         user.setVisible(true);

@@ -3,25 +3,38 @@ package interfaces;
 
 import java.awt.Color;
 import logica.enemigo;
+import javax.swing.JButton;
+import logica.*;
 public class partida extends javax.swing.JFrame {
     
+    boolean turno = true;
     int tablero [][];
+    int tableroj[][];
     int barco2 [][];
     int barco3 [][];
     int barco4 [][];
     int barco5 [][];
     int contador =0;
-    
+    int count =0;
+    Disparar disp;
+    TableroE tab = new TableroE();
+    usuario user = new usuario();
     enemigo enemi = new enemigo ();
-    public partida(int tablero [][], int barco2 [][], int barco3 [][], int barco4 [][], int barco5 [][]) {
+    JButton [][] botones = new JButton [10][10];
+    public partida(int tablero [][], int barco2 [][], int barco3 [][], int barco4 [][], int barco5 [][], int tableroj [][], int mbarco2[][], int mbarco3 [][], int mbarco4 [][], int mbarco5[][], int orientacion [] ) {
         initComponents();
+        inicializarTablero();
+        int [][]tab2=tab.gettableroj();
+        user.casilla_barco(botones, tab2, mbarco2,mbarco3,mbarco4,mbarco5, orientacion);
         this.setLocationRelativeTo(null);
+        this.tableroj = tableroj;
         this.tablero = tablero;
         this.barco2 = barco2;
         this.barco3 = barco3;
         this.barco4 = barco4;
         this.barco5 = barco5;
         
+        disp= new Disparar (botones,tableroj, turno, barco2,barco3,barco4,barco5);
         imagenes im = new imagenes (panel1,"fondo2");
         panel1.add(im).repaint();
         
@@ -32,10 +45,34 @@ public class partida extends javax.swing.JFrame {
         panel3.setOpaque(false);
         panel3.setBorder(null);
         panel3.setBackground(new Color (0,0,0,0));
+        
+        for (int i = 0; i<10;i++){
+            for (int j = 0; j<10 ;j++){
+                System.out.print(tableroj [i][j]);
+            } 
+            System.out.println();
+        }
      
         
     }
 
+     private void inicializarTablero() {
+    try {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+
+                String nombre = "b" + i + j;
+
+                java.lang.reflect.Field field = this.getClass().getDeclaredField(nombre);
+                field.setAccessible(true);
+
+                botones[i][j] = (JButton) field.get(this);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -250,6 +287,7 @@ public class partida extends javax.swing.JFrame {
         b189 = new javax.swing.JButton();
         b190 = new javax.swing.JButton();
         label1 = new javax.swing.JLabel();
+        label2 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -2190,26 +2228,37 @@ public class partida extends javax.swing.JFrame {
 
         label1.setText("jLabel1");
 
+        label2.setText("jLabel1");
+
         javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
-                .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(646, 646, 646))
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78)))
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addComponent(panel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(646, 646, 646))))
         );
         panel1Layout.setVerticalGroup(
             panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panel1Layout.createSequentialGroup()
@@ -2275,7 +2324,7 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b03ActionPerformed
 
     private void b00ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b00ActionPerformed
-        // TODO add your handling code here:
+        System.out.println("funciona");
     }//GEN-LAST:event_b00ActionPerformed
 
     private void b10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b10ActionPerformed
@@ -2635,9 +2684,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b99ActionPerformed
 
     private void b100ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b100ActionPerformed
-        int x=1;
-        int y=1;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b100, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2646,9 +2714,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b100ActionPerformed
 
     private void b2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b2ActionPerformed
+       if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=1;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b2, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2657,9 +2744,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b2ActionPerformed
 
     private void b3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b3ActionPerformed
+        if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=2;
-       boolean hundir = enemi.ataque(x,y,b3, barco2,barco3,barco4,barco5,tablero);
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b3, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2668,9 +2774,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b3ActionPerformed
 
     private void b4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b4ActionPerformed
+        if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=3;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b4, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2679,9 +2804,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b4ActionPerformed
 
     private void b5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b5ActionPerformed
+        if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=4;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b5, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2690,9 +2834,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b5ActionPerformed
 
     private void b6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b6ActionPerformed
+       if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=5;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b6, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2701,9 +2864,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b6ActionPerformed
 
     private void b7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b7ActionPerformed
+        if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=6;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b7, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2712,9 +2894,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b7ActionPerformed
 
     private void b8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b8ActionPerformed
+       if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=7;
-       boolean hundir = enemi.ataque(x,y,b8, barco2,barco3,barco4,barco5,tablero);
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b8, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2723,9 +2924,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b8ActionPerformed
 
     private void b9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b9ActionPerformed
+       if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=8;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b9, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2734,9 +2954,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b9ActionPerformed
 
     private void b101ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b101ActionPerformed
+         if (!turno){return;}
+        int respuesta=0;
         int x=0;
-        int y=9;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b101, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2745,9 +2984,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b101ActionPerformed
 
     private void b1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b1ActionPerformed
+        if (!turno){return;}
+        int respuesta=0;
         int x=0;
         int y=0;
         boolean hundir = enemi.ataque(x,y,b1, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2760,9 +3018,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b1ActionPerformed
 
     private void b102ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b102ActionPerformed
-        int x=1;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
         int y=0;
         boolean hundir = enemi.ataque(x,y,b102, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2771,9 +3048,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b102ActionPerformed
 
     private void b103ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b103ActionPerformed
-        int x=1;
-        int y=2;
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b103, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2782,9 +3078,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b103ActionPerformed
 
     private void b104ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b104ActionPerformed
-        int x=1;
-        int y=3;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b104, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2793,9 +3108,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b104ActionPerformed
 
     private void b105ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b105ActionPerformed
-        int x=1;
-        int y=4;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b105, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2804,9 +3138,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b105ActionPerformed
 
     private void b106ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b106ActionPerformed
-        int x=1;
-        int y=5;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b106, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2815,9 +3168,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b106ActionPerformed
 
     private void b107ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b107ActionPerformed
-        int x=1;
-        int y=6;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b107, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2826,9 +3198,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b107ActionPerformed
 
     private void b108ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b108ActionPerformed
-        int x=1;
-        int y=7;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b108, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2837,9 +3228,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b108ActionPerformed
 
     private void b109ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b109ActionPerformed
-        int x=1;
-        int y=8;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b109, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2848,9 +3258,28 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b109ActionPerformed
 
     private void b110ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b110ActionPerformed
-        int x=1;
-        int y=9;
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
         boolean hundir = enemi.ataque(x,y,b110, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
         if (hundir == true ){
             contador ++;
             String c = Integer.toString(contador);
@@ -2859,323 +3288,2403 @@ public class partida extends javax.swing.JFrame {
     }//GEN-LAST:event_b110ActionPerformed
 
     private void b111ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b111ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b111, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b111ActionPerformed
 
     private void b112ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b112ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b112, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b112ActionPerformed
 
     private void b113ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b113ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b113, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b113ActionPerformed
 
     private void b114ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b114ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b114, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b114ActionPerformed
 
     private void b115ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b115ActionPerformed
-        // TODO add your handling code here:
+       if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b115, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b115ActionPerformed
 
     private void b116ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b116ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b116, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b116ActionPerformed
 
     private void b117ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b117ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b117, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b117ActionPerformed
 
     private void b118ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b118ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b118, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b118ActionPerformed
 
     private void b119ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b119ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b119, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b119ActionPerformed
 
     private void b120ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b120ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b120, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b120ActionPerformed
 
     private void b121ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b121ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b121, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b121ActionPerformed
 
     private void b122ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b122ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b122, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b122ActionPerformed
 
     private void b123ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b123ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b123, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b123ActionPerformed
 
     private void b124ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b124ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b124, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b124ActionPerformed
 
     private void b125ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b125ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b125, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b125ActionPerformed
 
     private void b126ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b126ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b126, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b126ActionPerformed
 
     private void b127ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b127ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b127, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b127ActionPerformed
 
     private void b128ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b128ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b128, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b128ActionPerformed
 
     private void b129ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b129ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b129, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b129ActionPerformed
 
     private void b130ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b130ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b130, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b130ActionPerformed
 
     private void b131ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b131ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b131, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b131ActionPerformed
 
     private void b132ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b132ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b132, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b132ActionPerformed
 
     private void b133ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b133ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b133, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b133ActionPerformed
 
     private void b134ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b134ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b134, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b134ActionPerformed
 
     private void b135ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b135ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b135, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b135ActionPerformed
 
     private void b136ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b136ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b136, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b136ActionPerformed
 
     private void b137ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b137ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b137, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b137ActionPerformed
 
     private void b138ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b138ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b138, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b138ActionPerformed
 
     private void b139ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b139ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b139, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b139ActionPerformed
 
     private void b140ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b140ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b140, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b140ActionPerformed
 
     private void b141ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b141ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b141, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b141ActionPerformed
 
     private void b142ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b142ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b142, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b142ActionPerformed
 
     private void b143ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b143ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b143, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b143ActionPerformed
 
     private void b144ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b144ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b144, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b144ActionPerformed
 
     private void b145ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b145ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b145, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b145ActionPerformed
 
     private void b146ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b146ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b146, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b146ActionPerformed
 
     private void b147ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b147ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b147, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b147ActionPerformed
 
     private void b148ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b148ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b148, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b148ActionPerformed
 
     private void b149ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b149ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b149, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b149ActionPerformed
 
     private void b150ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b150ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b150, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b150ActionPerformed
 
     private void b151ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b151ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b151, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b151ActionPerformed
 
     private void b152ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b152ActionPerformed
-        // TODO add your handling code here:
+       if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b152, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b152ActionPerformed
 
     private void b153ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b153ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b153, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b153ActionPerformed
 
     private void b154ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b154ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b154, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b154ActionPerformed
 
     private void b155ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b155ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b155, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b155ActionPerformed
 
     private void b156ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b156ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b156, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b156ActionPerformed
 
     private void b157ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b157ActionPerformed
-        // TODO add your handling code here:
+       if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b157, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b157ActionPerformed
 
     private void b158ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b158ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b158, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b158ActionPerformed
 
     private void b159ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b159ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b159, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b159ActionPerformed
 
     private void b160ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b160ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b160, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b160ActionPerformed
 
     private void b161ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b161ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b161, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b161ActionPerformed
 
     private void b162ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b162ActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b162, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b162ActionPerformed
 
     private void b163ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b163ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b163, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b163ActionPerformed
 
     private void b164ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b164ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b164, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b164ActionPerformed
 
     private void b165ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b165ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b165, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b165ActionPerformed
 
     private void b166ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b166ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b166, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b166ActionPerformed
 
     private void b167ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b167ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b167, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b167ActionPerformed
 
     private void b168ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b168ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b168, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b168ActionPerformed
 
     private void b169ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b169ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b169, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b169ActionPerformed
 
     private void b170ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b170ActionPerformed
-        // TODO add your handling code here:
+       if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b170, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b170ActionPerformed
 
     private void b171ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b171ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b171, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b171ActionPerformed
 
     private void b172ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b172ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b172, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b172ActionPerformed
 
     private void b173ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b173ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b173, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b173ActionPerformed
 
     private void b174ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b174ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b174, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b174ActionPerformed
 
     private void b175ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b175ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b175, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b175ActionPerformed
 
     private void b176ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b176ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b176, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b176ActionPerformed
 
     private void b177ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b177ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b177, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b177ActionPerformed
 
     private void b178ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b178ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b178, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b178ActionPerformed
 
     private void b179ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b179ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b179, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b179ActionPerformed
 
     private void b180ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b180ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b180, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b180ActionPerformed
 
     private void b181ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b181ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b181, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b181ActionPerformed
 
     private void b182ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b182ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b182, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b182ActionPerformed
 
     private void b183ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b183ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b183, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b183ActionPerformed
 
     private void b184ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b184ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b184, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b184ActionPerformed
 
     private void b185ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b185ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b185, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b185ActionPerformed
 
     private void b186ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b186ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b186, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b186ActionPerformed
 
     private void b187ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b187ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b187, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b187ActionPerformed
 
     private void b188ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b188ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b188, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b188ActionPerformed
 
     private void b189ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b189ActionPerformed
-        // TODO add your handling code here:
+        if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b189, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b189ActionPerformed
 
     private void b190ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_b190ActionPerformed
-        // TODO add your handling code here:
+         if (!turno){return;}
+        int respuesta=0;
+        int x=0;
+        int y=0;
+        boolean hundir = enemi.ataque(x,y,b190, barco2,barco3,barco4,barco5,tablero);
+        turno = false;
+        if (enemi.correcto(x, y, tablero) == false){
+            respuesta=disp.dispararmaquina(1, 0, 0);
+            if (respuesta ==2){
+            turno = true;
+            }
+            if (respuesta ==3){
+                turno = true;
+                count++;
+                String a =Integer.toString(contador);
+                label2.setText(a);
+            }
+        }
+        else {
+            turno=true;
+        }
+        
+        if (hundir == true ){
+            contador ++;
+            String c = Integer.toString(contador);
+            label1.setText(c);
+        }
     }//GEN-LAST:event_b190ActionPerformed
 
 
@@ -3382,6 +5891,7 @@ public class partida extends javax.swing.JFrame {
     private javax.swing.JButton b99;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel label1;
+    private javax.swing.JLabel label2;
     private javax.swing.JPanel panel1;
     private javax.swing.JPanel panel2;
     private javax.swing.JPanel panel3;

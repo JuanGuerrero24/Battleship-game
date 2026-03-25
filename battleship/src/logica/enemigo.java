@@ -16,6 +16,7 @@ public class enemigo {
         
         boolean validar = true;
         if (tablero [x][y] == 0){validar=false;}
+        else if (tablero [x][y]==1){validar = true;}
             return validar;
     }
     
