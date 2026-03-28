@@ -2,84 +2,101 @@ package controlador;
 
 import modelo.*;
 import vista.VentanaPartida;
-import javax.swing.Timer;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PartidaController {
+
     private VentanaPartida vista;
-    private boolean miTurno = true;
+
+    // Variable compartida de turnos
+    private volatile boolean miTurno = true;
 
     public PartidaController(VentanaPartida vista) {
         this.vista = vista;
         inicializarEventos();
-        barcos.mostrarFlotaDefensora(vista.getBotonesJugador());
+        iniciarHiloIA(); 
     }
 
     private void inicializarEventos() {
-        vista.getLblEstado().setText("¡TU TURNO! Ataca al enemigo");
+        vista.getLblEstado().setText("¡TU TURNO!");
     }
 
+    // ================= JUGADOR =================
     public void disparar(int f, int c) {
-        if (!vista.getBotonesMaquina()[f][c].isEnabled() || !miTurno) return;
+
+        if (!miTurno) return;
+
+        if (!vista.getBotonesMaquina()[f][c].isEnabled()) return;
 
         if (Tablero.tablero[f][c] == 1) {
+
             Tablero.tablero[f][c] = 4;
             Tablero.impactosJugador++;
-            vista.getBotonesMaquina()[f][c].setIcon(vista.escalar("/iconos/boton.png", vista.getBotonesMaquina()[f][c]));
-            
-            boolean barcoHundido = false;
-            for (Barco b : barcos.flotaMaquina) {
-                if (b.contienePunto(f, c)) {
-                    b.registrarImpacto();
-                    if (b.estaHundido()) {
-                        javax.swing.JOptionPane.showMessageDialog(vista, "¡BARCO ENEMIGO HUNDIDO! Turno de la IA.");
-                        barcoHundido = true;
-                    }
-                    break;
-                }
-            }
-            
+
+            vista.getBotonesMaquina()[f][c].setIcon(
+                vista.escalar("/iconos/boton.png", vista.getBotonesMaquina()[f][c])
+            );
+
             vista.getBotonesMaquina()[f][c].setEnabled(false);
-            
-            if (barcoHundido) {
-                cambiarTurnoIA();
-            } else {
-                vista.getLblEstado().setText("¡ACIERTO! Turno extra.");
-                verificarVictoria();
-            }
+
+            vista.getLblEstado().setText("¡ACIERTO! Dispara otra vez");
+
         } else {
-            vista.getBotonesMaquina()[f][c].setIcon(vista.escalar("/iconos/equis.png", vista.getBotonesMaquina()[f][c]));
-            vista.getLblEstado().setText("¡AGUA! Turno de la IA.");
+
+            vista.getBotonesMaquina()[f][c].setIcon(
+                vista.escalar("/iconos/equis.png", vista.getBotonesMaquina()[f][c])
+            );
+
             vista.getBotonesMaquina()[f][c].setEnabled(false);
-            cambiarTurnoIA();
+
+            vista.getLblEstado().setText("Turno IA...");
+            miTurno = false; // CAMBIO DE TURNO
         }
+
+        verificarVictoria();
     }
 
-    private void cambiarTurnoIA() {
-        miTurno = false;
-        vista.bloquearRadar(false);
-        Timer t = new Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Disparar.dispararMaquina(vista.getBotonesJugador());
-                vista.getLblEstado().setText("Tu turno.");
-                vista.bloquearRadar(true);
-                miTurno = true;
-                verificarVictoria();
-                ((Timer)e.getSource()).stop();
+    // ================= IA =================
+    private void iniciarHiloIA() {
+
+        Thread hiloIA = new Thread(() -> {
+
+            while (true) {
+
+                if (!miTurno) {
+
+                    try {
+                        Thread.sleep(1000); // pausa IA
+                    } catch (InterruptedException e) {}
+
+                    Disparar.dispararMaquina(vista.getBotonesJugador());
+
+                    // Volver al hilo de Swing
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        vista.getLblEstado().setText("Tu turno");
+                        vista.bloquearRadar(true);
+                    });
+
+                    miTurno = true;
+
+                    verificarVictoria();
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {}
             }
         });
-        t.setRepeats(false);
-        t.start();
+
+        hiloIA.start();
     }
 
+    // ================= VICTORIA =================
     private void verificarVictoria() {
         if (Tablero.impactosJugador == 17) {
             javax.swing.JOptionPane.showMessageDialog(vista, "¡VICTORIA!");
             vista.dispose();
         } else if (Tablero.impactosMaquina == 17) {
-            javax.swing.JOptionPane.showMessageDialog(vista, "HAS SIDO DERROTADO");
+            javax.swing.JOptionPane.showMessageDialog(vista, "DERROTA");
             vista.dispose();
         }
     }

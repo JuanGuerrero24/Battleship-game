@@ -15,7 +15,7 @@ public class ColocacionController {
         vista.getBtnListo().addActionListener(e -> abrirPartida());
     }
 
-    private void abrirPartida() {
+    public void abrirPartida() {
         new VentanaPartida().setVisible(true);
         vista.dispose();
     }
